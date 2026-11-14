@@ -1,0 +1,34 @@
+name: Package Release
+permissions:
+  contents: write            # required to create releases / upload assets
+  issues: read               # optional, used by generate_release_notes
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  package-release:
+    name: Package Release
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - name: Generate artifacts
+        # RELEASE is set to the tag name (vX.X.X) without the first character
+        run: |
+          make -j2 artifacts archives RELEASE=${GITHUB_REF_NAME:1}
+        working-directory: build
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          token: ${{ secrets.COMMIT_TOKEN }}
+          draft: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            build/generated/oscal*

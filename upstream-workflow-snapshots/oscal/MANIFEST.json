@@ -1,0 +1,32 @@
+{
+  "source": "https://github.com/usnistgov/OSCAL.git",
+  "commit": "e061961c7702afeabffdf5e59894d35e748dade1",
+  "number_of_original_workflow_files": 4,
+  "original_ci_is_disabled": true,
+  "files": [
+    {
+      "upstream_path": ".github/workflows/issue-triage.yml",
+      "reference_path": "upstream-workflow-snapshots/oscal/.github/workflows/issue-triage.yml",
+      "git_blob": "f65087b8916f236df90b974866a80f0ab86ebf5c",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/periodic.yml",
+      "reference_path": "upstream-workflow-snapshots/oscal/.github/workflows/periodic.yml",
+      "git_blob": "5e5f3a128da5c453ad2a9bc3c432509bec78d7a1",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/release.yml",
+      "reference_path": "upstream-workflow-snapshots/oscal/.github/workflows/release.yml",
+      "git_blob": "382c3c9755a5b254e87965a9a085e59f5e8de1d3",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/status.yml",
+      "reference_path": "upstream-workflow-snapshots/oscal/.github/workflows/status.yml",
+      "git_blob": "3423c01da1cf52bad27e09ff432e4e84d35d0645",
+      "original_mode": "100644"
+    }
+  ]
+}
