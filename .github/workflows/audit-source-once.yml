@@ -1,0 +1,14 @@
+name: Verify repaired oscal original Git objects
+on:
+  push:
+    paths:
+      - '.github/workflows/audit-source-once.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    uses: Anselm04/Macro-source-code-reference-/.github/workflows/reusable-source-audit.yml@main
+    with:
+      upstream_url: https://github.com/usnistgov/OSCAL.git
+      upstream_sha: e061961c7702afeabffdf5e59894d35e748dade1
+      audit_slug: oscal
