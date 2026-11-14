@@ -1,0 +1,58 @@
+name: Restore missing OSCAL tracked source and Gitlinks once
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-missing-source-once.yml'
+permissions:
+  contents: write
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Restore exact upstream blobs and submodule Gitlinks
+        shell: bash
+        run: |
+          set -euo pipefail
+          PIN=e061961c7702afeabffdf5e59894d35e748dade1
+          git -c protocol.version=2 fetch -q --depth=1 --filter=blob:none https://github.com/usnistgov/OSCAL.git "$PIN"
+          test "$(git rev-parse FETCH_HEAD)" = "$PIN"
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          def entries(rev):
+              raw=subprocess.check_output(["git","ls-tree","-rz",rev]); d={}
+              for e in raw.split(b"\0"):
+                  if not e: continue
+                  hdr,p=e.split(b"\t",1);mode,typ,oid=hdr.decode().split()
+                  d[p.decode()] = (mode,typ,oid)
+              return d
+          u=entries("FETCH_HEAD"); d=entries("HEAD")
+          missing=sorted(p for p in u if p not in d and not p.startswith(".github/workflows/"))
+          assert set(missing)=={"build/metaschema-xslt","build/xspec","src/specifications/profile-resolution/requirement-tests/output-actual/req-include-all-asis_RESOLVED.xml","src/specifications/profile-resolution/requirement-tests/output-actual/req-include-all-flat_RESOLVED.xml"},missing
+          for p in missing:
+              mode,typ,oid=u[p]
+              if mode=="160000" and typ=="commit":
+                  Path(p).mkdir(parents=True,exist_ok=True)
+                  subprocess.run(["git","update-index","--add","--cacheinfo",f"160000,{oid},{p}"],check=True)
+              elif typ=="blob":
+                  subprocess.run(["git","restore","--source=FETCH_HEAD","--staged","--worktree","--",p],check=True)
+                  subprocess.run(["git","add","-f","--",p],check=True)
+              else: raise RuntimeError((p,mode,typ))
+              got=subprocess.check_output(["git","ls-files","-s","--",p],text=True).strip()
+              assert oid in got,(p,got,oid)
+          print("Restored all",len(missing),"missing original Git objects with exact hashes and modes")
+          PY
+          mkdir -p .trillionai
+          printf '%s\n' '# OSCAL source reference repair' '' 'Restored four omitted Git-tracked paths at pinned NIST OSCAL revision e061961c7702afeabffdf5e59894d35e748dade1.' 'Two original Git submodule references and two XML fixture blobs were restored with matching upstream object identities and modes.' 'Submodule payload content is not included by merely restoring its Gitlink.' 'Upstream GitHub Actions workflows remain excluded. No upstream code executed.' > .trillionai/SOURCE_COMPLETENESS_REPAIR.md
+          rm .github/workflows/restore-missing-source-once.yml
+          git add .trillionai/SOURCE_COMPLETENESS_REPAIR.md
+          git add -u
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'fix(reference): restore OSCAL omitted XML fixtures and submodule Gitlinks'
+          git push origin HEAD:main
