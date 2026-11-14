@@ -1,0 +1,6 @@
+Official upstream: https://github.com/usnistgov/OSCAL
+Upstream commit: e061961c7702afeabffdf5e59894d35e748dade1
+Imported to: Anselm04/OSCAL-Source-Code-Reference
+Source licensing: see the original LICENSE.md and individual-file notices
+Excluded: upstream GitHub workflows (not executable in this reference mirror)
+No upstream source or build scripts were executed during the copy.
