@@ -1,0 +1,27 @@
+{
+  "upstream": "https://github.com/usnistgov/OSCAL.git",
+  "pinned_commit": "e061961c7702afeabffdf5e59894d35e748dade1",
+  "destination_main_sha": "07aca8bbd1838450a75c89f7ebbc477fbe1dc5c8",
+  "upstream_tracked_entries": 307,
+  "destination_tracked_entries": 301,
+  "missing_paths": [
+    ".github/workflows/issue-triage.yml",
+    ".github/workflows/periodic.yml",
+    ".github/workflows/release.yml",
+    ".github/workflows/status.yml",
+    "build/metaschema-xslt",
+    "build/xspec",
+    "src/specifications/profile-resolution/requirement-tests/output-actual/req-include-all-asis_RESOLVED.xml",
+    "src/specifications/profile-resolution/requirement-tests/output-actual/req-include-all-flat_RESOLVED.xml"
+  ],
+  "missing_path_count": 8,
+  "missing_upstream_ci_count": 4,
+  "missing_other_count": 4,
+  "mismatched_objects": [],
+  "mismatched_count": 0,
+  "extra_paths": [
+    ".github/workflows/audit-source-once.yml",
+    ".trillionai/SOURCE_PROVENANCE.txt"
+  ],
+  "extra_count": 2
+}
